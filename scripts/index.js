@@ -4,165 +4,30 @@
 })();
 
 // import {default_curated_subreddits, default_subreddits} from "./subreddits"
-import {lS,toggleCuratedSubreddit,toggleSubreddit,removeSubreddit, addSubreddit,sanitizeLocalStorage, addStyleString, getKeyFromValue} from "./utils.js"
+import {lS,toggleCuratedSubreddit,toggleSubreddit,removeSubreddit, addSubreddit,fetchAndSanitizeLocalStorage, addStyleString, getKeyFromValue, appendUserSubreddit, setUpEventHandlersForDropDownMenus} from "./utils.js"
 
 const valid_extensions = ["png", "jpg", "webm", "gif"]
 
-const getSubreddit = () => {
-  const subreddits = lS.getItem("subreddits")
-  const curated_subreddits = lS.getItem("curated_subreddits")
-
-  let enabled_subreddits = {};
-
-  for (let sub_key of Object.keys(subreddits)){
-    console.log(sub_key)
-    if (subreddits[sub_key].enabled) enabled_subreddits[sub_key] = sub_key
-  }
-
-  for (let cat_key of Object.keys(curated_subreddits)){
-    for (let sub_key of Object.keys(curated_subreddits[cat_key])){
-      const sub = curated_subreddits[cat_key][sub_key]
-      if (sub.enabled) enabled_subreddits[sub_key] = sub_key
-    }
-  }
-
-  const subcount = Object.keys(enabled_subreddits).length
-  const desired_idx = Math.floor(0.999 * Math.random() *  subcount )
-  const mean_chance = 1/subcount
-  let subreddit = ""
-  
-  if (subcount > 0){
-    while (1){
-      for (let sub in enabled_subreddits){
-        const chance = Math.random() 
-        if (chance < mean_chance){
-          return sub
-        }
-      }
-    }
-  }
-}
-
-const showSettings = () => {
-    const appendUserSubreddit = (subname, subreddits) => {
-      const subreddit = document.createElement("div")
-      subreddit.classList.add("subreddit")
-      // subreddit.classList.add("pretty")
-      // subreddit.classList.add("p-default")
-      subreddit.innerHTML =
-        `
-                <div class="pretty p-default">
-                  <input type="checkbox" name="nature" ` +
-        (subreddits[subname].enabled ? "checked" : "") +
-        `>
-                  <div class="state"> <label>`+ getKeyFromValue(subreddits, subreddits[subname]) + `</label></div></div>
-                  <div class="delete-button"></div>
-      `
-      subreddit.children[0].onclick = () => {
-        toggleSubreddit(subname)
-      }
-      subreddit.children[1].onclick = () => {
-        removeSubreddit(subname)
-        subreddit.parentElement.removeChild(subreddit)
-      }
-      const settings_window = document.querySelector(".settings-window")
-      settings_window.insertBefore(subreddit, settings_window.children[1])
-    }
-    document .querySelector(".settings-window-wrapper") .classList.remove("invisible")
-    document.querySelector(".settings-window-wrapper").classList.add("visible")
-
-    document.querySelector(".settings-window-exit-button").onclick = () => {
-      
-      const settings = document.querySelector(".settings-window")
-      while(settings.lastChild && settings.childElementCount > 2){
-        settings.removeChild(settings.lastChild)
-      }
-      document .querySelector(".settings-window-wrapper") .classList.remove("visible")
-      document.querySelector(".settings-window-wrapper").classList.add("invisible")
-    }
-
-    let {subreddits, curated_subreddits} = sanitizeLocalStorage()
-    
-    document.querySelector(".add-subreddit input").addEventListener("keyup", (event) => {
-      if (event.key == "Enter") {
-        const subname = event.target.value
-        addSubreddit(subname)
-        subreddits = lS.getItem("subreddits")
-        appendUserSubreddit(subname, subreddits)
-        document.querySelector(".add-subreddit input").value = ""
-      }
-    })
-    // display user subreddits
-    Object.keys(subreddits).map((key, idx) => {
-      const subreddit = document.createElement("div")
-      subreddit.classList.add("subreddit")
-      // subreddit.classList.add("pretty")
-      // subreddit.classList.add("p-default")
-      subreddit.innerHTML =
-                `<div class="pretty p-default">
-                    <input type="checkbox" name="nature" ` +
-          (subreddits[key].enabled ? "checked" : "") +
-          `>
-                    <div class="state"> <label>`+ getKeyFromValue(subreddits, subreddits[key]) + `</label></div>
-                  </div>
-                  <div class="delete-button"></div>`
-      subreddit.querySelector(".pretty").children[0].onclick = () => {
-        toggleSubreddit(key)
-      }
-      subreddit.children[1].onclick = () => {
-        removeSubreddit(key)
-        subreddit.parentElement.removeChild(subreddit)
-      }
-      document.querySelector(".settings-window").appendChild(subreddit)
-    })
-    // display curated subreddits
-    Object.keys(curated_subreddits).map((cat, idx1) => {
-        const title = document.createElement("div")
-        document.querySelector(".settings-window").appendChild(title)
-        title.classList.add("title")
-        title.innerHTML = getKeyFromValue(curated_subreddits, curated_subreddits[cat])
-      Object.keys(curated_subreddits[cat]).map((subname, idx2)=>{
-        const subreddit = document.createElement("div")
-        subreddit.classList.add("subreddit")
-        subreddit.classList.add("pretty")
-        subreddit.classList.add("p-default")
-        subreddit.innerHTML =
-          `
-                    <input type="checkbox" name="nature" ` +
-          (curated_subreddits[cat][subname].enabled ? "checked" : "") +
-          `>
-                    <div class="state"> <label>`+ getKeyFromValue(curated_subreddits[cat], curated_subreddits[cat][subname]) + `</label></div>
-        `
-        subreddit.children[0].onclick = () => {
-          toggleCuratedSubreddit(cat,subname)
-        }
-        document.querySelector(".settings-window").appendChild(subreddit)
-      })
-    })
-    
-}
 
 window.onload = res => {
+
   document.querySelector(".settings-button").onclick = () => {
     showSettings()
   }
   
   // --------------------------- fetching ------------------------------ //
-
-  const {subreddits, curated_subreddits} = sanitizeLocalStorage()
+  
+  const {subreddits, curated_subreddits, sorting, range, time} = fetchAndSanitizeLocalStorage()
+  
+  setUpEventHandlersForDropDownMenus(sorting,range,time);
 
   const subreddit = getSubreddit();
 
   console.log("Subreddit is " + subreddit)
 
-  const sort = "top"
-  const time = "all"
-  const range = 80
-
-  const link = "https://www.reddit.com/r/" + subreddit + "/" + sort + ".json?t=" + time + "&limit=" + range
+  const link = "https://www.reddit.com/r/" + subreddit + "/" + sorting + ".json?t=" + time + "&limit=" + range
 
   const max_unsuccessful_fetches = 1
-  var successful_fetch = false
   let fetch_attempts_cnt = 0
 
   do {
@@ -243,3 +108,118 @@ window.onload = res => {
     // ( successful_fetch === false )
   )
 }
+
+const getSubreddit = () => {
+  const subreddits = lS.getObjectItem("subreddits")
+  const curated_subreddits = lS.getObjectItem("curated_subreddits")
+
+  let enabled_subreddits = {};
+
+  for (let sub_key of Object.keys(subreddits)){
+    if (subreddits[sub_key].enabled) enabled_subreddits[sub_key] = sub_key
+  }
+
+  for (let cat_key of Object.keys(curated_subreddits)){
+    for (let sub_key of Object.keys(curated_subreddits[cat_key])){
+      const sub = curated_subreddits[cat_key][sub_key]
+      if (sub.enabled) enabled_subreddits[sub_key] = sub_key
+    }
+  }
+
+  const subcount = Object.keys(enabled_subreddits).length
+  const desired_idx = Math.floor(0.999 * Math.random() *  subcount )
+  const mean_chance = 1/subcount
+  let subreddit = ""
+  
+  if (subcount > 0){
+    while (1){
+      for (let sub in enabled_subreddits){
+        const chance = Math.random() 
+        if (chance < mean_chance){
+          return sub
+        }
+      }
+    }
+  }
+}
+
+const showSettings = () => {
+
+
+    document.querySelector(".settings-window-wrapper") .classList.remove("invisible")
+    document.querySelector(".settings-window-wrapper").classList.add("visible")
+
+    document.querySelector(".settings-window-exit-button").onclick = () => {
+      
+      const settings = document.querySelector(".settings-window")
+      while(settings.lastChild && settings.childElementCount > 2){
+        settings.removeChild(settings.lastChild)
+      }
+      document .querySelector(".settings-window-wrapper") .classList.remove("visible")
+      document.querySelector(".settings-window-wrapper").classList.add("invisible")
+    }
+
+    let { subreddits, curated_subreddits, sorting, range, time} = fetchAndSanitizeLocalStorage()
+    document.querySelector(".dropdown-sort>button").innerHTML = sorting
+    
+    document.querySelector(".add-subreddit input").addEventListener("keyup", (event) => {
+      if (event.key == "Enter") {
+        const subname = event.target.value
+        addSubreddit(subname)
+        subreddits = lS.getObjectItem("subreddits")
+        appendUserSubreddit(subname, subreddits)
+        document.querySelector(".add-subreddit input").value = ""
+      }
+    })
+
+    // -------------------------------- Display Subreddits -------------------------------- //
+    // user subreddits
+    Object.keys(subreddits).map((key, idx) => {
+      const subreddit = document.createElement("div")
+      subreddit.classList.add("subreddit")
+      // subreddit.classList.add("pretty")
+      // subreddit.classList.add("p-default")
+      subreddit.innerHTML =
+                `<div class="pretty p-default">
+                    <input type="checkbox" name="nature" ` + (subreddits[key].enabled ? "checked" : "") + `>
+                    <div class="state"> <label>`+ getKeyFromValue(subreddits, subreddits[key]) + `</label></div>
+                  </div>
+                  <div class="delete-button"></div>`
+      subreddit.querySelector(".pretty").children[0].onclick = () => {
+        toggleSubreddit(key)
+      }
+      subreddit.children[1].onclick = () => {
+        removeSubreddit(key)
+        subreddit.parentElement.removeChild(subreddit)
+      }
+      document.querySelector(".settings-window").appendChild(subreddit)
+    })
+
+    // curated subreddits
+    Object.keys(curated_subreddits).map((cat, idx1) => {
+        const title = document.createElement("div")
+        document.querySelector(".settings-window").appendChild(title)
+        title.classList.add("title")
+        title.innerHTML = getKeyFromValue(curated_subreddits, curated_subreddits[cat])
+      Object.keys(curated_subreddits[cat]).map((subname, idx2)=>{
+        const subreddit = document.createElement("div")
+        subreddit.classList.add("subreddit")
+        subreddit.classList.add("pretty")
+        subreddit.classList.add("p-default")
+        subreddit.innerHTML =
+          `
+                    <input type="checkbox" name="nature" ` +
+          (curated_subreddits[cat][subname].enabled ? "checked" : "") +
+          `>
+                    <div class="state"> <label>`+ getKeyFromValue(curated_subreddits[cat], curated_subreddits[cat][subname]) + `</label></div>
+        `
+        subreddit.children[0].onclick = () => {
+          toggleCuratedSubreddit(cat,subname)
+        }
+        document.querySelector(".settings-window").appendChild(subreddit)
+      })
+    })
+    
+}
+
+

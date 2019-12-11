@@ -13,6 +13,47 @@
         <div class="settings-window">
             <span class="add-subreddit">
                 <input type="text"  >
+                <div class="dropdowns" style="">
+                    <div class="dropdown-description">Sort: </div>
+                    <div class="dropdown dropdown-sort">
+                        <!-- hot, new controversial, rising,         10, 25, 50, 100, 150, 200, 250, 400    -->
+                      <button class="dropbtn"></button>
+                      <div class="dropdown-content">
+                        <a id="dropdown-sorting-top">Top</a>
+                        <a id="dropdown-sorting-hot">Hot</a>
+                        <a id="dropdown-sorting-new">New</a>
+                        <a id="dropdown-sorting-controversial">Controversial</a>
+                        <a id="dropdown-sorting-rising">Rising</a>
+                      </div>
+                    </div>
+                    <div class="dropdown-description">Range: </div>
+                    <div class="dropdown dropdown-range">
+                      <button class="dropbtn">Dropdown</button>
+                      <div class="dropdown-content">
+                        <a id="dropdown-range-25">25</a>
+                        <a id="dropdown-range-50">50</a>
+                        <a id="dropdown-range-100">100</a>
+                        <a id="dropdown-range-150">150</a>
+                        <a id="dropdown-range-200">200</a>
+                        <a id="dropdown-range-250">250</a>
+                        <a id="dropdown-range-300">300</a>
+                        <a id="dropdown-range-500">500</a>
+                        <a>Bigger = longer page load</a>
+                      </div>
+                    </div><div class="dropdown-description">Time: </div>
+                    <div class="dropdown dropdown-time">
+                      <button class="dropbtn">Time</button>
+                      <div class="dropdown-content">
+                        <!-- hour day week month year all -->
+                        <a id="dropdown-time-hour">hour</a>
+                        <a id="dropdown-time-day">day</a>
+                        <a id="dropdown-time-week">week</a>
+                        <a id="dropdown-time-month">month</a>
+                        <a id="dropdown-time-year">year</a>
+                        <a id="dropdown-time-all">all</a>
+                        <a>Only works with "top" sorting</a>
+                      </div>
+                    </div></div>
                 <div class="tip">Type in a subreddit to add it to the rotation.</div>
             </span>
         <a class="settings-window-exit-button" >

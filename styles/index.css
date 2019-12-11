@@ -8,6 +8,7 @@ body {
 }
 /* @import url('https://fonts.googleapis.com/css?family=Livvic:100,200,300&display=swap'); */
 
+/* -------------------------------- Main Page -------------------------------- */
 .loading {
     /* height: 100%; */
     opacity: 0;
@@ -75,6 +76,7 @@ body {
     box-shadow: 0px 0px 5px;
     transition: 213ms linear;
 }
+
 .settings-button {
     text-decoration: none;
     height: 4rem;
@@ -136,6 +138,9 @@ body {
     pointer-events: none;
     opacity: 0;
 }
+
+/* -------------------------------- Settings Page -------------------------------- */
+
 .settings-window {
     width: 40rem;
     padding-top: 1rem;
@@ -281,6 +286,58 @@ body {
     width: 40px;
     margin: 0 auto;
 } */
+
+
+.dropdowns {
+    display:flex;
+    flex-direction:row;
+    justify-content: space-between;
+    margin-top: 0.2rem;
+    padding-left: 0.4rem;
+    padding-top: 1.0rem;
+    padding-bottom: 1.0rem;
+    font-family: 'Livvic', sans-serif;
+    font-size: 1.2rem;
+    color: white;
+}
+.dropbtn {
+    background-color: rgb(71, 71, 71);
+    color: white;
+    padding: 7px 14px;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+}
+.dropdown-description {
+    margin: auto 0;
+}
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 1px 15px;
+    text-decoration: none;
+    display: block;
+}
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd; cursor:pointer;}
+
+/* Show the dropdown menu on hover */
+/* .dropdown:hover .dropdown-content {display: block;} */
+
+.dropdown:hover .dropbtn {background-color: rgb(50,50,50); cursor: pointer;}
 
 
 
