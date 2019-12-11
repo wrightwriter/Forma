@@ -4,7 +4,7 @@
  	"version": "1.0",
 	"description": "A short description of your extension which will appear in the Chrome web store.",
 	"icons": {
-		"16": "images/world-1.png"
+		"16": "images/cross.svg"
 	},
   	"chrome_url_overrides" : {
     	"newtab": "index.html"
