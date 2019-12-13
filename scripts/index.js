@@ -150,8 +150,6 @@ const getRandomSubreddit = () => {
 }
 
 const showSettings = () => {
-
-
     document.querySelector(".settings-window-wrapper") .classList.remove("invisible")
     document.querySelector(".settings-window-wrapper").classList.add("visible")
 

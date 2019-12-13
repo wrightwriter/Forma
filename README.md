@@ -1,4 +1,4 @@
-# New-Tab Extension Example
+# Figma - Beautiful New Tab
 A basic new tab extension for Chrome to get you jump-started and building your own extension!
 
 ### How to run an extension in developer mode
