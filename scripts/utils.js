@@ -193,7 +193,7 @@ export const deleteUserSettings = () => {
   let subreddits = localStorage.setItem("subreddits", "null")
   let curated_subreddits = localStorage.setItem("curated_subreddits", "null")
   let sorting = localStorage.setItem("sorting", "null")
-  let range = localStorage.setItem("count_to_find", "null")
+  let range = localStorage.setItem("range", "null")
   let time = localStorage.setItem("time", "null")
 }
 export const fetchAndSanitizeLocalStorage = () => {
@@ -201,7 +201,7 @@ export const fetchAndSanitizeLocalStorage = () => {
   let subreddits = localStorage.getItem("subreddits")
   let curated_subreddits = localStorage.getItem("curated_subreddits")
   let sorting = lS.getStringItem("sorting")
-  let range = lS.getStringItem("count_to_find")
+  let range = lS.getStringItem("range")
   let time = lS.getStringItem("time")
 
   if (subreddits === null || subreddits === "null") {
@@ -223,7 +223,7 @@ export const fetchAndSanitizeLocalStorage = () => {
     sorting = "top"
   }
   if (range == null || range === "null") {
-    lS.setStringItem("count_to_find", "100")
+    lS.setStringItem("range", "100")
     range = "100"
   }
   if (time == null || time === "null") {
@@ -268,92 +268,20 @@ export const appendUserSubreddit = (subname, subreddits) => {
 
 export const setUpEventHandlersForDropDownMenus = (sorting,range,time) => {
 
-  // Display current values
+  document.querySelector(".dropdown-sort .dropdown-content").value = sorting
+  document.querySelector(".dropdown-time .dropdown-content").value = time
+  document.querySelector(".dropdown-range .dropdown-content").value = range
 
-  document.querySelector(".dropdown-sort .dropbtn").innerHTML = sorting
-  document.querySelector(".dropdown-time .dropbtn").innerHTML = time
-  document.querySelector(".dropdown-range .dropbtn").innerHTML = range
-
-  // Toggle drop downs
-
-  const toggleMenu = (menu_class_name) => {
-    const dropdown = document.querySelector(menu_class_name + " .dropdown-content") 
-    const is_displayed = dropdown.style.display === "block" ? true : false
-    if (is_displayed) {
-      dropdown.style.display = "none"
-    } else {
-      dropdown.style.display = "block"
-    }
-  }
-
-  document.querySelector(".dropdown-sort").addEventListener("click", ()=>{ 
-    toggleMenu(".dropdown-sort")
-  })
-
-  document.querySelector(".dropdown-time").addEventListener("click", ()=>{ 
-    toggleMenu(".dropdown-time")
-  })
-
-  document.querySelector(".dropdown-range").addEventListener("click", ()=>{ 
-    toggleMenu(".dropdown-range")
-  })
-
-
-
-
-  // Select items
-
-  const setEventListenerForSingleItem = (menu_id, menu_class_name, local_storage_name, local_storage_value) => {
-    document.querySelector(menu_id).addEventListener("click", ()=>{
-      localStorage.setItem(local_storage_name,local_storage_value)
-      document.querySelector(menu_class_name + " .dropbtn").innerHTML = local_storage_value
+  const setEventListenerForMenu = (menu_selector, local_storage_name) => {
+    document.querySelector(menu_selector).addEventListener("change", (e)=>{
+      localStorage.setItem(local_storage_name,e.target.value)
+      console.log(local_storage_name)
+      console.log(e.target.value)
     })
   }
-
-  setEventListenerForSingleItem("#dropdown-sorting-top", ".dropdown-sort", "sort","top")
-  setEventListenerForSingleItem("#dropdown-sorting-hot", ".dropdown-sort", "sort","hot")
-  setEventListenerForSingleItem("#dropdown-sorting-new", ".dropdown-sort", "sort","new")
-  setEventListenerForSingleItem("#dropdown-sorting-controversial", ".dropdown-sort", "sort","controversial")
-  setEventListenerForSingleItem("#dropdown-sorting-rising", ".dropdown-sort", "sort","rising")
-
-  setEventListenerForSingleItem("#dropdown-range-25", ".dropdown-range", "range", "25")
-  setEventListenerForSingleItem("#dropdown-range-50", ".dropdown-range", "range", "50")
-  setEventListenerForSingleItem("#dropdown-range-100", ".dropdown-range", "range", "100")
-  setEventListenerForSingleItem("#dropdown-range-150", ".dropdown-range", "range", "150")
-  setEventListenerForSingleItem("#dropdown-range-200", ".dropdown-range", "range", "200")
-  setEventListenerForSingleItem("#dropdown-range-250", ".dropdown-range", "range", "250")
-  setEventListenerForSingleItem("#dropdown-range-300", ".dropdown-range", "range", "300")
-  setEventListenerForSingleItem("#dropdown-range-500", ".dropdown-range", "range", "500")
-
-  setEventListenerForSingleItem("#dropdown-time-hour", ".dropdown-time", "time", "hour")
-  setEventListenerForSingleItem("#dropdown-time-day", ".dropdown-time", "time", "day")
-  setEventListenerForSingleItem("#dropdown-time-week", ".dropdown-time", "time", "week")
-  setEventListenerForSingleItem("#dropdown-time-month", ".dropdown-time", "time", "month")
-  setEventListenerForSingleItem("#dropdown-time-year", ".dropdown-time", "time", "year")
-  setEventListenerForSingleItem("#dropdown-time-all", ".dropdown-time", "time", "all")
-
-
-
-{/* <a id="dropdown-range-25">25</a>
-<a id="dropdown-range-50">50</a>
-<a id="dropdown-range-100">100</a>
-<a id="dropdown-range-150">250</a>
-<a id="dropdown-range-200">200</a>
-<a id="dropdown-range-250">250</a>
-<a id="dropdown-range-300">300</a>
-<a id="dropdown-range-500">300</a> */}
-
-// document.querySelector("#dropdown-sorting-top").addEventListener("click", ()=>{localStorage.setItem("sorting","top")})
-// // <a id="dropdown-sorting-top">Top</a>
-// document.querySelector("#dropdown-sorting-hot").addEventListener("click", ()=>{lsetEventListenerForSingleItemocalStorage.setItem("sorting","hot")})
-// // <a id="dropdown-sorting-hot">Hot</a>
-// document.querySelector("#dropdown-sorting-new").addEventListener("click", ()=>{localStorage.setItem("sorting","new")})
-// // <a id="dropdown-sorting-new">New</a>
-// document.querySelector("#dropdown-sorting-controversial").addEventListener("click", ()=>{localStorage.setItem("sorting","controversial")})
-// // <a id="dropdown-sorting-controversial">Controversial</a>
-// document.querySelector("#dropdown-sorting-rising").addEventListener("click", ()=>{localStorage.setItem("sorting","rising")})
-// // <a id="dropdown-sorting-rising">Rising</a>
-
+  setEventListenerForMenu(".dropdown-sort .dropdown-content", "sorting")
+  setEventListenerForMenu(".dropdown-range .dropdown-content", "range")
+  setEventListenerForMenu(".dropdown-time .dropdown-content", "time")
 
 
 };

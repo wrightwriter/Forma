@@ -1,38 +1,30 @@
 (async () => {
-  let src2 = chrome.extension.getURL('scripts/utils.js');
-  let contentScript2 = await import(src2);
+  await import(chrome.extension.getURL('scripts/utils.js'));
 })();
 
-// import {default_curated_subreddits, default_subreddits} from "./subreddits"
 import {lS,toggleCuratedSubreddit,toggleSubreddit,removeSubreddit, addSubreddit,fetchAndSanitizeLocalStorage, addStyleString, getKeyFromValue, appendUserSubreddit, setUpEventHandlersForDropDownMenus} from "./utils.js"
 
 const valid_extensions = ["png", "jpg", "webm", "gif"]
 
 
-window.onload = res => {
+window.onload = async (res) => {
 
   document.querySelector(".settings-button").onclick = () => {
     showSettings()
   }
   
-  // --------------------------- fetching ------------------------------ //
-  
-  const {subreddits, curated_subreddits, sorting, range, time} = fetchAndSanitizeLocalStorage()
+  let {subreddits, curated_subreddits, sorting, range, time} = fetchAndSanitizeLocalStorage()
   
   setUpEventHandlersForDropDownMenus(sorting,range,time);
 
-  const subreddit = getSubreddit();
+  async function tryARandomSubreddit (){
+    const subreddit = getRandomSubreddit();
+    console.log("Subreddit is " + subreddit)
+    const link = "https://www.reddit.com/r/" + subreddit + "/" + sorting + ".json?t=" + time + "&limit=" + range
 
-  console.log("Subreddit is " + subreddit)
 
-  const link = "https://www.reddit.com/r/" + subreddit + "/" + sorting + ".json?t=" + time + "&limit=" + range
-
-  const max_unsuccessful_fetches = 1
-  let fetch_attempts_cnt = 0
-
-  do {
-    fetch_attempts_cnt++
-    fetch(link, {
+    let fetch_successful = false
+    const res = await fetch(link, {
       method: "get",
     })
       .then(res => {
@@ -41,11 +33,13 @@ window.onload = res => {
       .then(res => {
         console.log(link)
         console.log(res)
-        // successful_fetch = true
+
+        range = res.data.children.length
         let img_src
         let ext
         let is_extension_valid
         do {
+          // Try different images of selected subreddit
           const idx = Math.floor(Math.random() * range)
           img_src = res.data.children[idx].data.url
           const title = res.data.children[idx].data.title
@@ -57,59 +51,71 @@ window.onload = res => {
 
           if (is_extension_valid) {
             const img = new Image()
+            fetch_successful = true
             img.onload = () => {
+              const pace_loaded_notifier = document.createElement('div')
+              pace_loaded_notifier.classList.add("loaded-pace")
+              document.body.appendChild(pace_loaded_notifier)
               const ratio = img.width / img.height
-              const style =
-                `
+              const style = `
                             .loaded {
                                 opacity: 100;
                                 background: url("${img.src}")  no-repeat center center fixed;
-                                background-size: ` +
-                (ratio > 1.1 ? "cover" : "contain") +
-                `;
+                                background-size: ` + (ratio > 1.1 ? "cover" : "contain") + `;
                                 background-color: black;
                                 transition: opacity 200ms linear;
                             } 
                             `
               addStyleString(style)
-              document.querySelector("body").classList.remove("loading")
-              document.querySelector("body").classList.add("loaded")
+              const container =  document.querySelector(".loading")
+              container.classList.remove("loading")
+              container.classList.add("loaded")
               document.querySelector(".name").innerHTML = title
               document.querySelector(".sub").innerHTML = subreddit
               document
                 .querySelector(".image-title .name")
                 .setAttribute("href", "https://reddit.com/" + reddit_href)
+
               document
                 .querySelector(".image-title .sub")
                 .setAttribute("href", "https://reddit.com/r/" + subreddit)
-              document
-                .querySelector(".download-button")
-                .setAttribute("href", img_src)
-              document
-                .querySelector(".download-button")
-                .setAttribute("download", `arttab.jpg`)
-              document
-                .querySelector(".download-button")
-                .setAttribute("download", ``)
+
+              document.querySelector(".download-button").onclick = () => {
+                chrome.runtime.sendMessage(img_src);
+              }
+
             }
             img.src = img_src
             is_extension_valid = true
             // display: flex;
           }
         } while (!is_extension_valid)
-        // } while (0)
+
       })
-      .catch(err => {
-        console.log(err)
+      .catch(()=>{
+        fetch_successful = false
       })
-  } while (
-    // 0
-    fetch_attempts_cnt < max_unsuccessful_fetches
-    // ( successful_fetch === false )
-  )
+      
+    if (!fetch_successful) {
+      throw Error(404)
+    }
+  }
+
+  
+
+  // Try 3 times
+  await tryARandomSubreddit().catch(async()=>{
+    alert("Unsuccessful fetch 1, trying again")
+    await tryARandomSubreddit().catch(async()=>{
+      alert("Unsuccessful fetch 2, trying again")
+      await tryARandomSubreddit().catch(async()=>{
+        alert("Unsuccessful fetch 3, trying again")
+      })
+    })
+  })
 }
 
-const getSubreddit = () => {
+const getRandomSubreddit = () => {
   const subreddits = lS.getObjectItem("subreddits")
   const curated_subreddits = lS.getObjectItem("curated_subreddits")
 
@@ -160,7 +166,7 @@ const showSettings = () => {
     }
 
     let { subreddits, curated_subreddits, sorting, range, time} = fetchAndSanitizeLocalStorage()
-    document.querySelector(".dropdown-sort>button").innerHTML = sorting
+    // document.querySelector(".dropdown-sort>button").innerHTML = sorting
     
     document.querySelector(".add-subreddit input").addEventListener("keyup", (event) => {
       if (event.key == "Enter") {
@@ -221,5 +227,7 @@ const showSettings = () => {
     })
     
 }
+
+
 
 

@@ -1,0 +1,16 @@
+<script>
+
+    alert("oy")
+chrome.runtime.onMessage.addListener(
+  function(arg, sender, sendResponse) {
+    alert("oy")
+    chrome.downloads.download({
+     url: arg,
+    //  filename: saveas,
+    // saveAs: false
+    });
+   }
+);
+
+
+</script>

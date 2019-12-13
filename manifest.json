@@ -1,12 +1,19 @@
 {
+	"background": {
+		"persistent": false,
+		"scripts": [ "scripts/downloader.js" ]
+ },
  	"manifest_version": 2,
- 	"name": "Name of your extension",
+ 	"name": "Forma - Your Beauitful New Tab",
  	"version": "1.0",
-	"description": "A short description of your extension which will appear in the Chrome web store.",
+	"description": "A beautiful new tab page.",
 	"icons": {
 		"16": "images/cross.svg"
 	},
-  	"chrome_url_overrides" : {
-    	"newtab": "index.html"
-  	}
+	"permissions": ["downloads", "background", "tabs"],
+	"chrome_url_overrides" : {
+		"newtab": "index.html"
+	},
+	"content_security_policy": 
+		"default-src 'self'; script-src 'self' 'sha256-18OKVJ297efPSO+mfaxVgZ+UayC/h7SJ3Ptlghg63ak='; connect-src https://www.reddit.com; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com;        font-src https://fonts.gstatic.com; img-src *;"
 }

@@ -14,7 +14,6 @@ export const default_subreddits = {
   },
 }
 
-
 export const cureated_subreddits_art = {
   museum: {
     enabled: true,
@@ -92,7 +91,7 @@ export const curated_subreddits_nature = {
   },
 }
 
-export const default_curated_subreddits = {
-  Art: cureated_subreddits_art,
-  Nature: curated_subreddits_nature
-}
+// export const default_curated_subreddits = {
+//   Art: cureated_subreddits_art,
+//   Nature: curated_subreddits_nature
+// }
