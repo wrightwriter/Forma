@@ -1,19 +1,19 @@
 {
-	"background": {
-		"persistent": false,
-		"scripts": [ "scripts/downloader.js" ]
- },
  	"manifest_version": 2,
- 	"name": "Forma - Your Beauitful New Tab",
+ 	"name": "Forma - Beauitful New Tab From Reddit",
  	"version": "1.0",
-	"description": "A beautiful new tab page.",
+	"description": "Beautiful images from reddit, tailored to your interests",
 	"icons": {
-		"16": "images/cross.svg"
+		"128": "images/cross.svg"
 	},
 	"permissions": ["downloads", "background", "tabs"],
 	"chrome_url_overrides" : {
 		"newtab": "index.html"
 	},
+	"background": {
+		"persistent": false,
+		"scripts": [ "scripts/downloader.js" ]
+ },
 	"content_security_policy": 
 		"default-src 'self'; script-src 'self' 'sha256-18OKVJ297efPSO+mfaxVgZ+UayC/h7SJ3Ptlghg63ak='; connect-src https://www.reddit.com; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com;        font-src https://fonts.gstatic.com; img-src *;"
 }

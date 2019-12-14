@@ -2,35 +2,38 @@
 
 
 export const default_subreddits = {
-  museum: {
-    enabled: false,
-  },
-  SculturePorn: {
-    enabled: false,
-  },
-  ArtPorn: {
-    enabled: false,
-  },
   creativecoding: {
     enabled: false,
   },
 }
 
 export const curated_subreddits_art = {
-  "museum": {
-    enabled: true,
+  "ArtPorn": {
+    enabled: false,
+  },
+  "Art": {
+    enabled: false,
+  },
+  "ColorizedHistory": {
+    enabled: false,
   },
   "SculpturePorn": {
     enabled: true,
   },
-  "ArtPorn": {
+  "museum": {
+    enabled: true,
+  },
+  "glitch_art": {
+    enabled: true,
+  },
+  "pixelsorting": {
+    enabled: false,
+  },
+  "nocontextpics": {
     enabled: false,
   },
   "creativecoding": {
     enabled: true,
-  },
-  "Art": {
-    enabled: false,
   },
   "FractalPorn": {
     enabled: true,
@@ -39,10 +42,10 @@ export const curated_subreddits_art = {
 
 export const curated_subreddits_imaginary = {
   "ImaginarySkyscapes": {
-    enabled: false,
+    enabled: true,
   },
   "ImaginaryColorscapes": {
-    enabled: false,
+    enabled: true,
   },
   "ImaginaryWeather": {
     enabled: false,
@@ -51,7 +54,7 @@ export const curated_subreddits_imaginary = {
     enabled: true,
   },
   "ImaginaryLandscapes": {
-    enabled: false,
+    enabled: true,
   },
   "ImaginaryWildlands": {
     enabled: false,
@@ -81,7 +84,7 @@ export const curated_subreddits_nature = {
     enabled: true,
   },
   "NatureIsFuckingLit": {
-    enabled: false,
+    enabled: true,
   },
   "BotanicalPorn": {
     enabled: false,
@@ -105,10 +108,10 @@ export const curated_subreddits_nature = {
     enabled: false,
   },
   "AutumnPorn": {
-    enabled: false,
+    enabled: true,
   },
   "VillagePorn": {
-    enabled: false,
+    enabled: true,
   },
   "CityPorn": {
     enabled: false,
@@ -120,7 +123,7 @@ export const curated_subreddits_nature = {
     enabled: false,
   },
   "SpacePorn": {
-    enabled: false,
+    enabled: true,
   },
   "BeachPorn": {
     enabled: false,
@@ -197,13 +200,13 @@ export const deleteUserSettings = () => {
   let time = localStorage.setItem("time", "null")
 }
 export const fetchAndSanitizeLocalStorage = () => {
-  // Set default parameters on first launch
   let subreddits = localStorage.getItem("subreddits")
   let curated_subreddits = localStorage.getItem("curated_subreddits")
   let sorting = lS.getStringItem("sorting")
   let range = lS.getStringItem("range")
   let time = lS.getStringItem("time")
-
+  
+  // Set default subs and settings on first launch
   if (subreddits === null || subreddits === "null") {
     lS.setObjectItem("subreddits", default_subreddits)
     subreddits = default_subreddits
@@ -218,17 +221,48 @@ export const fetchAndSanitizeLocalStorage = () => {
     curated_subreddits = lS.getObjectItem("curated_subreddits")
   }
 
-  if (sorting == null || sorting === "null") {
+  if (sorting === null || sorting === "null") {
     lS.setStringItem("sorting", "top")
     sorting = "top"
   }
-  if (range == null || range === "null") {
+  if (range === null || range === "null") {
     lS.setStringItem("range", "100")
     range = "100"
   }
-  if (time == null || time === "null") {
+  if (time === null || time === "null") {
     lS.setStringItem("time", "all")
     time = "all"
+  }
+
+  // Check if curated subs have been changed and add accordingly
+  // TODO: only run if in settings
+
+  let user_has_all_curated_subs = true
+  for (let cat_key of Object.keys(default_curated_subreddits)) {
+    for (let sub_key of Object.keys(default_curated_subreddits[cat_key])) {
+      if (!curated_subreddits[cat_key][sub_key] || !Object.keys(curated_subreddits[cat_key]).includes(sub_key)) {
+        user_has_all_curated_subs = false
+      }
+    }
+  }
+
+  if (!user_has_all_curated_subs) {
+    console.log("Updating curated subreddits...")
+    console.log(default_curated_subreddits)
+    let new_curated_subs = default_curated_subreddits
+    console.log(new_curated_subs)
+
+    for (let cat_key of Object.keys(default_curated_subreddits)){
+      for (let sub_key of Object.keys(default_curated_subreddits[cat_key])){
+        if (curated_subreddits[cat_key][sub_key]) {
+          if (Object.keys(new_curated_subs[cat_key]).includes(sub_key)) {
+            new_curated_subs[cat_key][sub_key] = curated_subreddits[cat_key][sub_key]
+          }
+        }
+      }
+    }
+    console.log(new_curated_subs)
+    lS.setObjectItem("curated_subreddits", new_curated_subs)
   }
 
   return {

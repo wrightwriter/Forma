@@ -1,10 +1,7 @@
 
-console.log("this is content.js reporting for duty");
-alert("yooo")
+console.log("The background script is working");
 chrome.runtime.onMessage.addListener(
   function(arg, sender, sendResponse) {
-    // var args=arg.collection;
-    alert("asfgadsg")
      chrome.downloads.download({
      url: arg,
     //  filename: saveas,

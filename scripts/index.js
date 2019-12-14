@@ -80,7 +80,10 @@ window.onload = async (res) => {
                 .querySelector(".image-title .sub")
                 .setAttribute("href", "https://reddit.com/r/" + subreddit)
 
-              document.querySelector(".download-button").onclick = () => {
+
+              document.querySelector(".download-button").href = img_src
+              document.querySelector(".download-button").onclick = (e) => {
+                e.preventDefault()
                 chrome.runtime.sendMessage(img_src);
               }
 
@@ -105,14 +108,16 @@ window.onload = async (res) => {
 
   // Try 3 times
   await tryARandomSubreddit().catch(async()=>{
-    alert("Unsuccessful fetch 1, trying again")
+    console.log("Unsuccessful fetch 1, trying again")
     await tryARandomSubreddit().catch(async()=>{
-      alert("Unsuccessful fetch 2, trying again")
+      console.log("Unsuccessful fetch 2, trying again")
       await tryARandomSubreddit().catch(async()=>{
-        alert("Unsuccessful fetch 3, trying again")
+        console.log("Unsuccessful fetch 3, trying again")
       })
     })
   })
+
+
 }
 
 const getRandomSubreddit = () => {
