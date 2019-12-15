@@ -8,7 +8,7 @@
 		"48": "images/logo48.png",
 		"128": "images/logo128.png"
 	},
-	"permissions": ["downloads", "background", "storage"],
+	"permissions": ["downloads", "background", "storage", "https://*/"],
 	"chrome_url_overrides" : {
 		"newtab": "index.html"
 	},
