@@ -1,12 +1,14 @@
 {
  	"manifest_version": 2,
  	"name": "Forma - Beauitful New Tab From Reddit",
- 	"version": "1.0",
-	"description": "Beautiful images from reddit, tailored to your interests",
+ 	"short_name": "Forma",
+ 	"version": "1.0.2",
+	"description": "Reddit images tailored to your interests.",
 	"icons": {
-		"128": "images/cross.svg"
+		"48": "images/logo48.png",
+		"128": "images/logo128.png"
 	},
-	"permissions": ["downloads", "background", "tabs"],
+	"permissions": ["downloads", "background", "storage"],
 	"chrome_url_overrides" : {
 		"newtab": "index.html"
 	},
@@ -15,5 +17,5 @@
 		"scripts": [ "scripts/downloader.js" ]
  },
 	"content_security_policy": 
-		"default-src 'self'; script-src 'self' 'sha256-18OKVJ297efPSO+mfaxVgZ+UayC/h7SJ3Ptlghg63ak='; connect-src https://www.reddit.com; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com;        font-src https://fonts.gstatic.com; img-src *;"
+		"default-src 'self'; script-src 'self' 'sha256-18OKVJ297efPSO+mfaxVgZ+UayC/h7SJ3Ptlghg63ak='; connect-src * https://www.reddit.com; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src * 'self' data: ;"
 }

@@ -1,6 +1,3 @@
-
-
-
 export const default_subreddits = {
   creativecoding: {
     enabled: false,
@@ -8,137 +5,143 @@ export const default_subreddits = {
 }
 
 export const curated_subreddits_art = {
-  "ArtPorn": {
+  ArtPorn: {
     enabled: false,
   },
-  "Art": {
+  Art: {
     enabled: false,
   },
-  "ColorizedHistory": {
+  ColorizedHistory: {
     enabled: false,
   },
-  "SculpturePorn": {
+  SculpturePorn: {
     enabled: true,
   },
-  "museum": {
-    enabled: true,
-  },
-  "glitch_art": {
-    enabled: true,
-  },
-  "pixelsorting": {
+  museum: {
     enabled: false,
   },
-  "nocontextpics": {
-    enabled: false,
-  },
-  "creativecoding": {
+  Heavymind: {
     enabled: true,
   },
-  "FractalPorn": {
+  glitch_art: {
+    enabled: false,
+  },
+  generative: {
+    enabled: false,
+  },
+  pixelsorting: {
+    enabled: false,
+  },
+  nocontextpics: {
+    enabled: false,
+  },
+  creativecoding: {
+    enabled: true,
+  },
+  FractalPorn: {
     enabled: true,
   },
 }
 
 export const curated_subreddits_imaginary = {
-  "ImaginarySkyscapes": {
+  ImaginarySkyscapes: {
     enabled: true,
   },
-  "ImaginaryColorscapes": {
+  ImaginaryColorscapes: {
     enabled: true,
   },
-  "ImaginaryWeather": {
+  ImaginaryWeather: {
     enabled: false,
   },
-  "ImaginaryMindscapes": {
+  ImaginaryMindscapes: {
     enabled: true,
   },
-  "ImaginaryLandscapes": {
+  ImaginaryLandscapes: {
     enabled: true,
   },
-  "ImaginaryWildlands": {
+  ImaginaryWildlands: {
     enabled: false,
   },
-  "ImaginaryCityscapes": {
+  ImaginaryCityscapes: {
     enabled: false,
   },
-  "ImaginaryHellscapes": {
+  ImaginaryHellscapes: {
     enabled: false,
   },
-  "ImaginaryArchers": {
+  ImaginaryArchers: {
     enabled: false,
   },
-  "ImaginaryDragons": {
+  ImaginaryDragons: {
     enabled: false,
   },
-  "ImaginaryArchers": {
+  ImaginaryArchers: {
     enabled: false,
   },
-  "ImaginaryBestOf": {
+  ImaginaryBestOf: {
     enabled: false,
   },
 }
 
 export const curated_subreddits_nature = {
-  "EarthPorn": {
+  EarthPorn: {
     enabled: true,
   },
-  "NatureIsFuckingLit": {
+  NatureIsFuckingLit: {
     enabled: true,
   },
-  "BotanicalPorn": {
+  BotanicalPorn: {
     enabled: false,
   },
-  "WaterPorn": {
+  WaterPorn: {
     enabled: false,
   },
-  "SeaPorn": {
+  SeaPorn: {
     enabled: false,
   },
-  "SkyPorn": {
-    enabled: false,
-  },
-  "FirePorn": {
-    enabled: false,
-  },
-  "DesertPorn": {
-    enabled: false,
-  },
-  "WinterPorn": {
-    enabled: false,
-  },
-  "AutumnPorn": {
+  SkyPorn: {
     enabled: true,
   },
-  "VillagePorn": {
+  FirePorn: {
+    enabled: false,
+  },
+  DesertPorn: {
+    enabled: false,
+  },
+  WinterPorn: {
     enabled: true,
   },
-  "CityPorn": {
-    enabled: false,
-  },
-  "WeatherPorn": {
-    enabled: false,
-  },
-  "GeologyPorn": {
-    enabled: false,
-  },
-  "SpacePorn": {
+  AutumnPorn: {
     enabled: true,
   },
-  "BeachPorn": {
+  VillagePorn: {
+    enabled: true,
+  },
+  CityPorn: {
     enabled: false,
   },
-  "MushroomPorn": {
+  WeatherPorn: {
     enabled: false,
   },
-  "SpringPorn": {
+  GeologyPorn: {
     enabled: false,
   },
-  "SummerPorn": {
+  SpacePorn: {
+    enabled: true,
+  },
+  BeachPorn: {
     enabled: false,
   },
-  "LavaPorn": {
+  MushroomPorn: {
     enabled: false,
+  },
+  SpringPorn: {
+    enabled: false,
+  },
+  SummerPorn: {
+    enabled: false,
+  },
+  LavaPorn: {
+    enabled: true,
   },
 }
 
@@ -162,17 +165,17 @@ export const lS = {
     return localStorage.getItem(location)
   },
 }
-export const addStyleString = (str) => {
+export const addStyleString = str => {
   var node = document.createElement("style")
   node.innerHTML = str
   document.body.appendChild(node)
 }
 export const getKeyFromValue = (object, value) => {
-  return Object.keys(object).find(key => object[key] === value);
+  return Object.keys(object).find(key => object[key] === value)
 }
-export const toggleCuratedSubreddit = (catkey,subkey) => {
+export const toggleCuratedSubreddit = (catkey, subkey) => {
   const subreddits = lS.getObjectItem("curated_subreddits")
-  subreddits[catkey][subkey].enabled = !subreddits[catkey][subkey].enabled  
+  subreddits[catkey][subkey].enabled = !subreddits[catkey][subkey].enabled
   lS.setObjectItem("curated_subreddits", subreddits)
 }
 
@@ -205,7 +208,7 @@ export const fetchAndSanitizeLocalStorage = () => {
   let sorting = lS.getStringItem("sorting")
   let range = lS.getStringItem("range")
   let time = lS.getStringItem("time")
-  
+
   // Set default subs and settings on first launch
   if (subreddits === null || subreddits === "null") {
     lS.setObjectItem("subreddits", default_subreddits)
@@ -240,7 +243,10 @@ export const fetchAndSanitizeLocalStorage = () => {
   let user_has_all_curated_subs = true
   for (let cat_key of Object.keys(default_curated_subreddits)) {
     for (let sub_key of Object.keys(default_curated_subreddits[cat_key])) {
-      if (!curated_subreddits[cat_key][sub_key] || !Object.keys(curated_subreddits[cat_key]).includes(sub_key)) {
+      if (
+        !curated_subreddits[cat_key][sub_key] ||
+        !Object.keys(curated_subreddits[cat_key]).includes(sub_key)
+      ) {
         user_has_all_curated_subs = false
       }
     }
@@ -252,11 +258,12 @@ export const fetchAndSanitizeLocalStorage = () => {
     let new_curated_subs = default_curated_subreddits
     console.log(new_curated_subs)
 
-    for (let cat_key of Object.keys(default_curated_subreddits)){
-      for (let sub_key of Object.keys(default_curated_subreddits[cat_key])){
+    for (let cat_key of Object.keys(default_curated_subreddits)) {
+      for (let sub_key of Object.keys(default_curated_subreddits[cat_key])) {
         if (curated_subreddits[cat_key][sub_key]) {
           if (Object.keys(new_curated_subs[cat_key]).includes(sub_key)) {
-            new_curated_subs[cat_key][sub_key] = curated_subreddits[cat_key][sub_key]
+            new_curated_subs[cat_key][sub_key] =
+              curated_subreddits[cat_key][sub_key]
           }
         }
       }
@@ -270,45 +277,45 @@ export const fetchAndSanitizeLocalStorage = () => {
     time: time,
     range: range,
     subreddits: subreddits,
-    curated_subreddits: curated_subreddits
+    curated_subreddits: curated_subreddits,
   }
 }
 
-
 export const appendUserSubreddit = (subname, subreddits) => {
-    const subreddit = document.createElement("div")
-    subreddit.classList.add("subreddit")
-    // subreddit.classList.add("pretty")
-    // subreddit.classList.add("p-default")
-    subreddit.innerHTML =
-      `
+  const subreddit = document.createElement("div")
+  subreddit.classList.add("subreddit")
+  // subreddit.classList.add("pretty")
+  // subreddit.classList.add("p-default")
+  subreddit.innerHTML =
+    `
               <div class="pretty p-default">
-                <input type="checkbox" name="nature" ` + (subreddits[subname].enabled ? "checked" : "") + `>
-                <div class="state"> <label>`+ getKeyFromValue(subreddits, subreddits[subname]) + `</label></div></div>
+                <input type="checkbox" name="nature" ` +
+    (subreddits[subname].enabled ? "checked" : "") +
+    `>
+                <div class="state"> <label>` +
+    getKeyFromValue(subreddits, subreddits[subname]) +
+    `</label></div></div>
                 <div class="delete-button"></div>
     `
-    subreddit.children[0].onclick = () => {
-      toggleSubreddit(subname)
-    }
-    subreddit.children[1].onclick = () => {
-      removeSubreddit(subname)
-      subreddit.parentElement.removeChild(subreddit)
-    }
-    const settings_window = document.querySelector(".settings-window")
-    settings_window.insertBefore(subreddit, settings_window.children[1])
+  subreddit.children[0].onclick = () => {
+    toggleSubreddit(subname)
   }
+  subreddit.children[1].onclick = () => {
+    removeSubreddit(subname)
+    subreddit.parentElement.removeChild(subreddit)
+  }
+  const settings_window = document.querySelector(".settings-window")
+  settings_window.insertBefore(subreddit, settings_window.children[1])
+}
 
-
-
-export const setUpEventHandlersForDropDownMenus = (sorting,range,time) => {
-
+export const setUpEventHandlersForDropDownMenus = (sorting, range, time) => {
   document.querySelector(".dropdown-sort .dropdown-content").value = sorting
   document.querySelector(".dropdown-time .dropdown-content").value = time
   document.querySelector(".dropdown-range .dropdown-content").value = range
 
   const setEventListenerForMenu = (menu_selector, local_storage_name) => {
-    document.querySelector(menu_selector).addEventListener("change", (e)=>{
-      localStorage.setItem(local_storage_name,e.target.value)
+    document.querySelector(menu_selector).addEventListener("change", e => {
+      localStorage.setItem(local_storage_name, e.target.value)
       console.log(local_storage_name)
       console.log(e.target.value)
     })
@@ -316,6 +323,24 @@ export const setUpEventHandlersForDropDownMenus = (sorting,range,time) => {
   setEventListenerForMenu(".dropdown-sort .dropdown-content", "sorting")
   setEventListenerForMenu(".dropdown-range .dropdown-content", "range")
   setEventListenerForMenu(".dropdown-time .dropdown-content", "time")
+}
 
+export const setUpEventHandlersForBottomMenuFadeOut = (_delay) => {
+  let timedelay = 1
+  function delayCheck() {
+    if (timedelay == 5) {
+      $("#bottom-bar").fadeOut()
+      timedelay = 1
+    }
+    timedelay = timedelay + 1
+  }
 
-};
+  $(document).mousemove(function() {
+    $("#bottom-bar").fadeIn()
+    timedelay = 1
+    clearInterval(_delay)
+    _delay = setInterval(delayCheck, 170)
+  })
+  // page loads starts delay timer
+  _delay = setInterval(delayCheck, 500)
+}
