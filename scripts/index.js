@@ -44,9 +44,16 @@ window.onload = async res => {
 
   try {
     chrome.storage.local.get(null, (data) => {
-      const  { title_name, sub_name, img_src, reddit_href, ratio} = data
+      let  { title_name, sub_name, img_src, reddit_href, ratio, width, height} = data
       const img_in = data.Image 
       const img = new Image()
+
+      if (width && height && ratio){
+        width = JSON.parse(width)
+        height = JSON.parse(height)
+        ratio = JSON.parse(ratio)
+      }
+
       if (img_in) {
 
         img.src = img_in.replace(/(\r\n|\n|\r)/gm, "")
@@ -60,7 +67,7 @@ window.onload = async res => {
                         height:  100%;
                         background-size: cover ;
                         background: url("${img.src}")  no-repeat center center fixed;
-                        background-size: ` + (ratio > 1.1 ? "cover" : "contain") + `;
+                        background-size: ` + ( (width < window.innerWidth && height < window.innerHeight) ? "auto" :  (ratio > 1.1) ? "cover" : "contain") + `;
                         background-color: black;
                         position: absolute;
                         opacity: 1;

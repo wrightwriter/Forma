@@ -306,9 +306,9 @@ body {
     z-index: -1;
     background-size: cover;
     /* height: 100%; */
-    transition: opacity 200ms linear;
+    /* transition: opacity 200ms linear; */
     animation-name: fadeIn;
-    animation-duration: 1s;
+    animation-duration: 0.35s;
     animation-fill-mode: both;
     background: black;
 }

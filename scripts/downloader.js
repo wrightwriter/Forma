@@ -171,7 +171,9 @@ function ImageLoader(url, title_name, sub_name, img_src, reddit_href, ratio ) {
             sub_name:sub_name, 
             img_src:img_src, 
             reddit_href:reddit_href,
-            ratio:img.width / img.height
+            ratio: JSON.stringify(img.width / img.height),
+            width: JSON.stringify(img.width),
+            height:JSON.stringify(img.height),
          })
    }
    img.src = reader.result.replace(/(\r\n|\n|\r)/gm, "")
