@@ -1,15 +1,8 @@
 
-body {
-    /* height: 100%; */
-    /* width: 100%;
-    height:  100%;
-    justify-content: stretch; */
-    /* display: contents; */
-    background-color: black;
-}
 /* @import url('https://fonts.googleapis.com/css?family=Livvic:100,200,300&display=swap'); */
 
 /* -------------------------------- Main Page -------------------------------- */
+
 
 .bottom-bar {
     position: absolute;
@@ -27,6 +20,7 @@ body {
     background: rgb(255,255,255);
     background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(0,0,0,1) 100%);
     display: flex;
+    animation: fadeIn 0.5s linear;
 }
 .bottom-bar a {
     color: white;
@@ -34,6 +28,11 @@ body {
     font-weight: 200;
     text-decoration: none;
 }
+
+.bottom-bar-fade-in {
+    opacity: 1;
+}
+
 .image-title {
     display: flex;
     flex-direction: column;
@@ -292,23 +291,43 @@ body {
 }
 
 
-.dropdown:hover .dropbtn {background-color: rgb(50,50,50); cursor: pointer;} */
+.dropdown:hover .dropbtn {background-color: rgb(50,50,50); cursor: pointer;} 
 
 
-.loading :not(.pace,.pace-inactive,.pace-progress) {
-    /* height: 100%; */
+/* .loading,.loading :not(.pace,.pace-inactive,.pace-progress) { */
+body {
+    background: black;
+}
+.loading {
     opacity: 0;
     width: 100%;
     height:  100%;
-    background: black no-repeat center center fixed;
+    position: absolute;
+    z-index: -1;
     background-size: cover;
+    /* height: 100%; */
     transition: opacity 200ms linear;
+    animation-name: fadeIn;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+    background: black;
 }
-.loaded .pace{ 
-    /* transition: opacity 200ms linear; */
-    /* opacity:0; */
-}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+} 
+
+/* .loaded {
+    opacity: 100;
+    transition: opacity 200ms linear;
+} */
 .pace {
+    opacity: 0.25;
   -webkit-pointer-events: none;
   pointer-events: none;
 
