@@ -1,3 +1,3 @@
-# Figma New Tab Extension
+# Forma New Tab Extension
 
-Figma replaces your new tab with a selection catored to your interests.
+Forma replaces your new tab with images, from a selection catored to your interests.
