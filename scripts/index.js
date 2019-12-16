@@ -24,7 +24,6 @@ let _delay = () => {}
 
 
 window.onload = async res => {
-  deleteUserSettings()
 
   document.querySelector(".settings-button").onclick = () => {
     showSettings()
@@ -42,7 +41,6 @@ window.onload = async res => {
 
   setUpEventHandlersForBottomMenuFadeOut(_delay)
 
-  try {
     chrome.storage.local.get(null, (data) => {
       let  { title_name, sub_name, img_src, reddit_href, ratio, width, height} = data
       const img_in = data.Image 
@@ -58,7 +56,6 @@ window.onload = async res => {
 
         img.src = img_in.replace(/(\r\n|\n|\r)/gm, "")
 
-        console.log("ratio is " + ratio)
 
         const style =
           `
@@ -105,7 +102,6 @@ window.onload = async res => {
           range: range,
           time: time,
         }}) // send to downloader.js
-        console.log("sent payload")
 
       } else {
         // Couldn't fetch an image
@@ -119,13 +115,10 @@ window.onload = async res => {
         chrome.runtime.sendMessage(
           message
         ) // send to downloader.js
-        console.log("sent payload")
       }
 
     });
-  } catch {
-    console.log("error retreiving from db")
-  }
+  
 
 }
 

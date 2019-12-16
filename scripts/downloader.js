@@ -14,11 +14,9 @@ const lS = {
     return localStorage.getItem(location)
   },
 }
-console.log("The background script is working");
 chrome.runtime.onMessage.addListener(
   function(arg, sender, sendResponse) {
      const async_wrapper = async (arg, sender, sendResponse) =>{
-      console.log(arg)
       
       console.log("received payload")
       if (arg.type === "download"){
@@ -30,7 +28,6 @@ chrome.runtime.onMessage.addListener(
       }
       else if (arg.type === "get_new_image") {
 
-         console.log("sadgasiwg")
          let { sorting, range, time} = arg.message
 
 

@@ -2,13 +2,13 @@
  	"manifest_version": 2,
  	"name": "Forma - Beauitful New Tab From Reddit",
  	"short_name": "Forma",
- 	"version": "1.0.4",
+ 	"version": "1.0.6",
 	"description": "Reddit images tailored to your interests.",
 	"icons": {
 		"48": "images/logo48.png",
 		"128": "images/logo128.png"
 	},
-	"permissions": ["downloads", "background", "storage", "https://*/"],
+	"permissions": ["downloads", "background", "storage", "unlimitedStorage", "https://*/", "http://*/"],
 	"chrome_url_overrides" : {
 		"newtab": "index.html"
 	},
