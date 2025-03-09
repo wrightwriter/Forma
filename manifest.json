@@ -1,21 +1,23 @@
 {
- 	"manifest_version": 2,
- 	"name": "Forma - Beauitful New Tab From Reddit",
- 	"short_name": "Forma",
- 	"version": "1.0.7",
-	"description": "Reddit images tailored to your interests.",
-	"icons": {
-		"48": "images/logo48.png",
-		"128": "images/logo128.png"
-	},
-	"permissions": ["downloads", "background", "storage", "unlimitedStorage", "https://*/", "http://*/"],
-	"chrome_url_overrides" : {
-		"newtab": "index.html"
-	},
-	"background": {
-		"persistent": false,
-		"scripts": [ "scripts/downloader.js" ]
- },
-	"content_security_policy": 
-		"default-src 'self'; script-src 'self' 'sha256-18OKVJ297efPSO+mfaxVgZ+UayC/h7SJ3Ptlghg63ak='; connect-src * https://www.reddit.com; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src * 'self' data: ;"
+  "name": "Forma - Beautiful New Tab From Reddit",
+  "manifest_version": 3,
+  "short_name": "Forma",
+  "version": "1.0.8",
+  "description": "Reddit images tailored to your interests.",
+  "icons": {
+    "48": "images/logo48.png",
+    "128": "images/logo128.png"
+  },
+  "permissions": ["downloads", "storage"],
+  "host_permissions": ["https://*/", "http://*/"],
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "background": {
+    "service_worker": "scripts/service-worker.js",
+    "type": "module"
+  },
+  "content_security_policy": {
+    "extension_pages": "default-src 'self'; script-src 'self'; connect-src * https://www.reddit.com; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src * 'self' data: ;"
+  }
 }
