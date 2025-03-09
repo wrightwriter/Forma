@@ -1,69 +1,56 @@
+/* Service worker that downloads the next image so it can be instantly shown when opening a new tab. */
+
 const valid_extensions = ["png", "jpg", "jpeg", "webm", "gif"];
 
-const lS = {
-  setObjectItem: (location, input) => {
-    return localStorage.setItem(location, JSON.stringify(input));
-  },
-  getObjectItem: (location) => {
-    return JSON.parse(localStorage.getItem(location));
-  },
-  setStringItem: (location, input) => {
-    return localStorage.setItem(location, input);
-  },
-  getStringItem: (location) => {
-    return localStorage.getItem(location);
-  },
-};
 chrome.runtime.onMessage.addListener(function (arg, sender, sendResponse) {
   const async_wrapper = async (arg, sender, sendResponse) => {
     console.log("received payload");
     if (arg.type === "download") {
       chrome.downloads.download({
         url: arg.message,
-        //  filename: saveas,
         saveAs: false,
       });
     } else if (arg.type === "get_new_image") {
       let { sorting, range, time } = arg.message;
 
       async function tryARandomSubreddit() {
-        const subreddit = getRandomSubreddit();
+        const subreddit = await getRandomSubreddit();
         console.log("Subreddit is " + subreddit);
         const link = "https://www.reddit.com/r/" + subreddit + "/" + sorting + ".json?t=" + time + "&limit=" + range;
 
-        let fetch_successful = false;
+        try {
+          const res = await fetch(link);
+          const resJson = await res.json();
 
-        const res = await fetch(link, {
-          method: "get",
-        })
-          .then((res) => {
-            return res.json();
-          })
-          .then((res) => {
-            console.log(link);
-            console.log(res);
+          console.log(link);
+          console.log(resJson.data);
 
-            choices = res.data.children;
-            choices = choices //shuffle array
-              .map((value) => ({ value, sort: Math.random() }))
-              .sort((a, b) => a.sort - b.sort)
-              .map(({ value }) => value);
-            for (let i = 0; i < choices.length; i++) {
-              img_url = URL.parse(choices[i].data.url);
-              if (valid_extensions.some((ext) => img_url.pathname.endsWith(ext))) {
-                ImageLoader(img_url.href, choices[i].data.title, subreddit, img_url.href, choices[i].data.permalink);
-                fetch_successful = true;
-                break;
+          const choices = resJson.data.children //shuffle array
+            .map((value) => ({ value, sort: Math.random() }))
+            .sort((a, b) => a.sort - b.sort)
+            .map(({ value }) => value);
+          for (let i = 0; i < choices.length; i++) {
+            const selectedImage = choices[i].data;
+            const img_url = URL.parse(selectedImage.url);
+            if (valid_extensions.some((ext) => img_url.pathname.endsWith(ext))) {
+              const response = await fetch(img_url.href + "?" + new Date().getTime());
+              if (!response.ok) {
+                console.error(response);
+                continue; //try another choice from the same subreddit
               }
+              const blob = await response.blob();
+              await storeBlob(blob);
+              chrome.storage.local.set({
+                title_name: selectedImage.title,
+                sub_name: subreddit,
+                reddit_href: selectedImage.permalink,
+              });
+              break;
             }
-          })
-          .catch((e) => {
-            console.log(e);
-            fetch_successful = false;
-          });
-
-        if (!fetch_successful) {
-          throw Error(404);
+          }
+        } catch (e) {
+          console.error(e);
+          throw e;
         }
       }
 
@@ -86,10 +73,8 @@ chrome.runtime.onMessage.addListener(function (arg, sender, sendResponse) {
   async_wrapper(arg, sender, sendResponse);
 });
 
-const getRandomSubreddit = () => {
-  const subreddits = lS.getObjectItem("subreddits");
-  const curated_subreddits = lS.getObjectItem("curated_subreddits");
-
+const getRandomSubreddit = async () => {
+  const { subreddits, curated_subreddits } = await chrome.storage.local.get(["subreddits", "curated_subreddits"]);
   let enabled_subreddits = {};
 
   for (let sub_key of Object.keys(subreddits)) {
@@ -104,9 +89,7 @@ const getRandomSubreddit = () => {
   }
 
   const subcount = Object.keys(enabled_subreddits).length;
-  const desired_idx = Math.floor(0.999 * Math.random() * subcount);
   const mean_chance = 1 / subcount;
-  let subreddit = "";
 
   // TODO: faster random logic here
   if (subcount > 0) {
@@ -121,32 +104,30 @@ const getRandomSubreddit = () => {
   }
 };
 
-function ImageLoader(url, title_name, sub_name, img_src, reddit_href, ratio) {
-  let imgxhr = new XMLHttpRequest();
-  imgxhr.open("GET", url + "?" + new Date().getTime());
-  imgxhr.responseType = "blob";
-  imgxhr.onload = function () {
-    if (imgxhr.status === 200) {
-      reader.readAsDataURL(imgxhr.response);
-    }
-  };
-  let reader = new FileReader();
-  reader.onloadend = () => {
-    const img = new Image();
-    img.onload = () => {
-      chrome.storage.local.set({
-        Image: reader.result,
-        title_name: title_name,
-        sub_name: sub_name,
-        img_src: img_src,
-        reddit_href: reddit_href,
-        ratio: JSON.stringify(img.width / img.height),
-        width: JSON.stringify(img.width),
-        height: JSON.stringify(img.height),
-      });
+/**
+ * Store a blob in "forma" indexedDB, "nextImageBlob" store, "blob" key, overwriting the existing record.
+ * @param {Blob} blob The binary image data to be stored.
+ * @returns {Promise<void>} Resolves when the blob is stored in indexedDB.
+ */
+async function storeBlob(blob) {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open("forma", 1);
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains("nextImageBlob")) {
+        db.createObjectStore("nextImageBlob");
+      }
     };
-    img.src = reader.result.replace(/(\r\n|\n|\r)/gm, "");
-    console.log("loaded an image");
-  };
-  imgxhr.send();
+    request.onsuccess = () => {
+      const db = request.result;
+      const tx = db.transaction("nextImageBlob", "readwrite");
+      const store = tx.objectStore("nextImageBlob");
+
+      store.put(blob, "blob");
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    };
+
+    request.onerror = () => reject(request.error);
+  });
 }

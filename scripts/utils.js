@@ -2,7 +2,7 @@ export const default_subreddits = {
   creativecoding: {
     enabled: false,
   },
-}
+};
 
 export const curated_subreddits_art = {
   ArtPorn: {
@@ -41,7 +41,7 @@ export const curated_subreddits_art = {
   FractalPorn: {
     enabled: true,
   },
-}
+};
 
 export const curated_subreddits_imaginary = {
   ImaginarySkyscapes: {
@@ -80,7 +80,7 @@ export const curated_subreddits_imaginary = {
   ImaginaryBestOf: {
     enabled: false,
   },
-}
+};
 
 export const curated_subreddits_nature = {
   EarthPorn: {
@@ -143,133 +143,114 @@ export const curated_subreddits_nature = {
   LavaPorn: {
     enabled: true,
   },
-}
+};
 
 export const default_curated_subreddits = {
   Art: curated_subreddits_art,
   Imaginary: curated_subreddits_imaginary,
   Nature: curated_subreddits_nature,
-}
+};
 
-export const lS = {
-  setObjectItem: (location, input) => {
-    return localStorage.setItem(location, JSON.stringify(input))
-  },
-  getObjectItem: location => {
-    return JSON.parse(localStorage.getItem(location))
-  },
-  setStringItem: (location, input) => {
-    return localStorage.setItem(location, input)
-  },
-  getStringItem: location => {
-    return localStorage.getItem(location)
-  },
-}
-export const addStyleString = str => {
-  var node = document.createElement("style")
-  node.innerHTML = str
-  document.body.appendChild(node)
-}
+export const addStyleString = (str) => {
+  var node = document.createElement("style");
+  node.innerHTML = str;
+  document.body.appendChild(node);
+};
 export const getKeyFromValue = (object, value) => {
-  return Object.keys(object).find(key => object[key] === value)
-}
-export const toggleCuratedSubreddit = (catkey, subkey) => {
-  const subreddits = lS.getObjectItem("curated_subreddits")
-  subreddits[catkey][subkey].enabled = !subreddits[catkey][subkey].enabled
-  lS.setObjectItem("curated_subreddits", subreddits)
-}
+  return Object.keys(object).find((key) => object[key] === value);
+};
+export const toggleCuratedSubreddit = async (catkey, subkey) => {
+  const { curated_subreddits } = await chrome.storage.local.get("curated_subreddits");
+  curated_subreddits[catkey][subkey].enabled = !curated_subreddits[catkey][subkey].enabled;
+  await chrome.storage.local.set({ curated_subreddits });
+};
 
-export const toggleSubreddit = key => {
-  const subreddits = lS.getObjectItem("subreddits")
-  subreddits[key].enabled = !subreddits[key].enabled
-  lS.setObjectItem("subreddits", subreddits)
-}
-export const removeSubreddit = key => {
-  const subreddits = lS.getObjectItem("subreddits")
-  delete subreddits[key]
-  lS.setObjectItem("subreddits", subreddits)
-}
-export const addSubreddit = subreddit => {
-  const subreddits = lS.getObjectItem("subreddits")
-  subreddits[subreddit] = {enabled: true}
-  lS.setObjectItem("subreddits", subreddits)
-}
+export const toggleSubreddit = async (key) => {
+  const { subreddits } = await chrome.storage.local.get("subreddits");
+  subreddits[key].enabled = !subreddits[key].enabled;
+  await chrome.storage.local.set({ subreddits });
+};
+export const removeSubreddit = async (key) => {
+  const { subreddits } = await chrome.storage.local.get("subreddits");
+  delete subreddits[key];
+  await chrome.storage.local.set({ subreddits });
+};
+export const addSubreddit = async (subreddit) => {
+  const { subreddits } = await chrome.storage.local.get("subreddits");
+  subreddits[subreddit] = { enabled: true };
+  await chrome.storage.local.set({ subreddits });
+  return subreddits;
+};
 
-export const deleteUserSettings = () => {
-  let subreddits = localStorage.setItem("subreddits", "null")
-  let curated_subreddits = localStorage.setItem("curated_subreddits", "null")
-  let sorting = localStorage.setItem("sorting", "null")
-  let range = localStorage.setItem("range", "null")
-  let time = localStorage.setItem("time", "null")
-}
-export const fetchAndSanitizeLocalStorage = () => {
-  let subreddits = localStorage.getItem("subreddits")
-  let curated_subreddits = localStorage.getItem("curated_subreddits")
-  let sorting = lS.getStringItem("sorting")
-  let range = lS.getStringItem("range")
-  let time = lS.getStringItem("time")
+export const deleteUserSettings = async () => {
+  await chrome.storage.local.set({
+    subreddits: undefined,
+    curated_subreddits: undefined,
+    sorting: undefined,
+    range: undefined,
+    time: undefined,
+  });
+};
+export const fetchAndSanitizeLocalStorage = async () => {
+  let { subreddits, curated_subreddits, sorting, range, time } = await chrome.storage.local.get([
+    "subreddits",
+    "curated_subreddits",
+    "sorting",
+    "range",
+    "time",
+  ]);
 
   // Set default subs and settings on first launch
-  if (subreddits === null || subreddits === "null") {
-    lS.setObjectItem("subreddits", default_subreddits)
-    subreddits = default_subreddits
-  } else {
-    subreddits = lS.getObjectItem("subreddits")
+  if (!subreddits) {
+    await chrome.storage.local.set({ subreddits: default_subreddits });
+    subreddits = default_subreddits;
   }
-
-  if (curated_subreddits === null || curated_subreddits === "null") {
-    lS.setObjectItem("curated_subreddits", default_curated_subreddits)
-    curated_subreddits = default_curated_subreddits
-  } else {
-    curated_subreddits = lS.getObjectItem("curated_subreddits")
+  if (!curated_subreddits) {
+    await chrome.storage.local.set({ curated_subreddits: default_curated_subreddits });
+    curated_subreddits = default_curated_subreddits;
   }
-
-  if (sorting === null || sorting === "null") {
-    lS.setStringItem("sorting", "top")
-    sorting = "top"
+  if (!sorting) {
+    await chrome.storage.local.set({ sorting: "top" });
+    sorting = "top";
   }
-  if (range === null || range === "null") {
-    lS.setStringItem("range", "100")
-    range = "100"
+  if (!range) {
+    await chrome.storage.local.set({ range: "100" });
+    range = "100";
   }
-  if (time === null || time === "null") {
-    lS.setStringItem("time", "all")
-    time = "all"
+  if (!time) {
+    await chrome.storage.local.set({ time: "all" });
+    time = "all";
   }
 
   // Check if curated subs have been changed and add accordingly
   // TODO: only run if in settings
 
-  let user_has_all_curated_subs = true
+  let user_has_all_curated_subs = true;
   for (let cat_key of Object.keys(default_curated_subreddits)) {
     for (let sub_key of Object.keys(default_curated_subreddits[cat_key])) {
-      if (
-        !curated_subreddits[cat_key][sub_key] ||
-        !Object.keys(curated_subreddits[cat_key]).includes(sub_key)
-      ) {
-        user_has_all_curated_subs = false
+      if (!curated_subreddits[cat_key][sub_key] || !Object.keys(curated_subreddits[cat_key]).includes(sub_key)) {
+        user_has_all_curated_subs = false;
       }
     }
   }
 
   if (!user_has_all_curated_subs) {
-    console.log("Updating curated subreddits...")
-    console.log(default_curated_subreddits)
-    let new_curated_subs = default_curated_subreddits
-    console.log(new_curated_subs)
+    console.log("Updating curated subreddits...");
+    console.log(default_curated_subreddits);
+    let new_curated_subs = default_curated_subreddits;
+    console.log(new_curated_subs);
 
     for (let cat_key of Object.keys(default_curated_subreddits)) {
       for (let sub_key of Object.keys(default_curated_subreddits[cat_key])) {
         if (curated_subreddits[cat_key][sub_key]) {
           if (Object.keys(new_curated_subs[cat_key]).includes(sub_key)) {
-            new_curated_subs[cat_key][sub_key] =
-              curated_subreddits[cat_key][sub_key]
+            new_curated_subs[cat_key][sub_key] = curated_subreddits[cat_key][sub_key];
           }
         }
       }
     }
-    console.log(new_curated_subs)
-    lS.setObjectItem("curated_subreddits", new_curated_subs)
+    console.log(new_curated_subs);
+    await chrome.storage.local.set({ curated_subreddits: new_curated_subs });
   }
 
   return {
@@ -278,12 +259,12 @@ export const fetchAndSanitizeLocalStorage = () => {
     range: range,
     subreddits: subreddits,
     curated_subreddits: curated_subreddits,
-  }
-}
+  };
+};
 
 export const appendUserSubreddit = (subname, subreddits) => {
-  const subreddit = document.createElement("div")
-  subreddit.classList.add("subreddit")
+  const subreddit = document.createElement("div");
+  subreddit.classList.add("subreddit");
   // subreddit.classList.add("pretty")
   // subreddit.classList.add("p-default")
   subreddit.innerHTML =
@@ -296,51 +277,51 @@ export const appendUserSubreddit = (subname, subreddits) => {
     getKeyFromValue(subreddits, subreddits[subname]) +
     `</label></div></div>
                 <div class="delete-button"></div>
-    `
+    `;
   subreddit.children[0].onclick = () => {
-    toggleSubreddit(subname)
-  }
+    toggleSubreddit(subname);
+  };
   subreddit.children[1].onclick = () => {
-    removeSubreddit(subname)
-    subreddit.parentElement.removeChild(subreddit)
-  }
-  const settings_window = document.querySelector(".settings-window")
-  settings_window.insertBefore(subreddit, settings_window.children[1])
-}
+    removeSubreddit(subname);
+    subreddit.parentElement.removeChild(subreddit);
+  };
+  const settings_window = document.querySelector(".settings-window");
+  settings_window.insertBefore(subreddit, settings_window.children[1]);
+};
 
 export const setUpEventHandlersForDropDownMenus = (sorting, range, time) => {
-  document.querySelector(".dropdown-sort .dropdown-content").value = sorting
-  document.querySelector(".dropdown-time .dropdown-content").value = time
-  document.querySelector(".dropdown-range .dropdown-content").value = range
+  document.querySelector(".dropdown-sort .dropdown-content").value = sorting;
+  document.querySelector(".dropdown-time .dropdown-content").value = time;
+  document.querySelector(".dropdown-range .dropdown-content").value = range;
 
-  const setEventListenerForMenu = (menu_selector, local_storage_name) => {
-    document.querySelector(menu_selector).addEventListener("change", e => {
-      localStorage.setItem(local_storage_name, e.target.value)
-      console.log(local_storage_name)
-      console.log(e.target.value)
-    })
-  }
-  setEventListenerForMenu(".dropdown-sort .dropdown-content", "sorting")
-  setEventListenerForMenu(".dropdown-range .dropdown-content", "range")
-  setEventListenerForMenu(".dropdown-time .dropdown-content", "time")
-}
+  const setEventListenerForMenu = (menu_selector, setting_name) => {
+    document.querySelector(menu_selector).addEventListener("change", async (e) => {
+      await chrome.storage.local.set({ [setting_name]: e.target.value });
+      console.log(setting_name);
+      console.log(e.target.value);
+    });
+  };
+  setEventListenerForMenu(".dropdown-sort .dropdown-content", "sorting");
+  setEventListenerForMenu(".dropdown-range .dropdown-content", "range");
+  setEventListenerForMenu(".dropdown-time .dropdown-content", "time");
+};
 
 export const setUpEventHandlersForBottomMenuFadeOut = (_delay) => {
-  let timedelay = 1
+  let timedelay = 1;
   function delayCheck() {
     if (timedelay == 5) {
-      $("#bottom-bar").fadeOut()
-      timedelay = 1
+      $("#bottom-bar").fadeOut();
+      timedelay = 1;
     }
-    timedelay = timedelay + 1
+    timedelay = timedelay + 1;
   }
 
-  $(document).mousemove(function() {
-    $("#bottom-bar").fadeIn()
-    timedelay = 1
-    clearInterval(_delay)
-    _delay = setInterval(delayCheck, 170)
-  })
+  $(document).mousemove(function () {
+    $("#bottom-bar").fadeIn();
+    timedelay = 1;
+    clearInterval(_delay);
+    _delay = setInterval(delayCheck, 170);
+  });
   // page loads starts delay timer
-  _delay = setInterval(delayCheck, 500)
-}
+  _delay = setInterval(delayCheck, 500);
+};
