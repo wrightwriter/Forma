@@ -1,155 +1,4 @@
-export const default_subreddits = {
-  creativecoding: {
-    enabled: false,
-  },
-};
-
-export const curated_subreddits_art = {
-  ArtPorn: {
-    enabled: false,
-  },
-  Art: {
-    enabled: false,
-  },
-  ColorizedHistory: {
-    enabled: false,
-  },
-  SculpturePorn: {
-    enabled: true,
-  },
-  museum: {
-    enabled: false,
-  },
-  Heavymind: {
-    enabled: true,
-  },
-  glitch_art: {
-    enabled: false,
-  },
-  generative: {
-    enabled: false,
-  },
-  pixelsorting: {
-    enabled: false,
-  },
-  nocontextpics: {
-    enabled: false,
-  },
-  creativecoding: {
-    enabled: true,
-  },
-  FractalPorn: {
-    enabled: true,
-  },
-};
-
-export const curated_subreddits_imaginary = {
-  ImaginarySkyscapes: {
-    enabled: true,
-  },
-  ImaginaryColorscapes: {
-    enabled: true,
-  },
-  ImaginaryWeather: {
-    enabled: false,
-  },
-  ImaginaryMindscapes: {
-    enabled: true,
-  },
-  ImaginaryLandscapes: {
-    enabled: true,
-  },
-  ImaginaryWildlands: {
-    enabled: false,
-  },
-  ImaginaryCityscapes: {
-    enabled: false,
-  },
-  ImaginaryHellscapes: {
-    enabled: false,
-  },
-  ImaginaryArchers: {
-    enabled: false,
-  },
-  ImaginaryDragons: {
-    enabled: false,
-  },
-  ImaginaryArchers: {
-    enabled: false,
-  },
-  ImaginaryBestOf: {
-    enabled: false,
-  },
-};
-
-export const curated_subreddits_nature = {
-  EarthPorn: {
-    enabled: true,
-  },
-  NatureIsFuckingLit: {
-    enabled: true,
-  },
-  BotanicalPorn: {
-    enabled: false,
-  },
-  WaterPorn: {
-    enabled: false,
-  },
-  SeaPorn: {
-    enabled: false,
-  },
-  SkyPorn: {
-    enabled: true,
-  },
-  FirePorn: {
-    enabled: false,
-  },
-  DesertPorn: {
-    enabled: false,
-  },
-  WinterPorn: {
-    enabled: true,
-  },
-  AutumnPorn: {
-    enabled: true,
-  },
-  VillagePorn: {
-    enabled: true,
-  },
-  CityPorn: {
-    enabled: false,
-  },
-  WeatherPorn: {
-    enabled: false,
-  },
-  GeologyPorn: {
-    enabled: false,
-  },
-  SpacePorn: {
-    enabled: true,
-  },
-  BeachPorn: {
-    enabled: false,
-  },
-  MushroomPorn: {
-    enabled: false,
-  },
-  SpringPorn: {
-    enabled: false,
-  },
-  SummerPorn: {
-    enabled: false,
-  },
-  LavaPorn: {
-    enabled: true,
-  },
-};
-
-export const default_curated_subreddits = {
-  Art: curated_subreddits_art,
-  Imaginary: curated_subreddits_imaginary,
-  Nature: curated_subreddits_nature,
-};
+import { default_filters, default_subreddits, default_curated_subreddits } from "./default-subreddits.js";
 
 export const addStyleString = (str) => {
   var node = document.createElement("style");
@@ -182,15 +31,6 @@ export const addSubreddit = async (subreddit) => {
   return subreddits;
 };
 
-export const deleteUserSettings = async () => {
-  await chrome.storage.local.set({
-    subreddits: undefined,
-    curated_subreddits: undefined,
-    sorting: undefined,
-    range: undefined,
-    time: undefined,
-  });
-};
 export const fetchAndSanitizeLocalStorage = async () => {
   let { subreddits, curated_subreddits, sorting, range, time } = await chrome.storage.local.get([
     "subreddits",
@@ -200,27 +40,14 @@ export const fetchAndSanitizeLocalStorage = async () => {
     "time",
   ]);
 
-  // Set default subs and settings on first launch
-  if (!subreddits) {
-    await chrome.storage.local.set({ subreddits: default_subreddits });
-    subreddits = default_subreddits;
-  }
-  if (!curated_subreddits) {
-    await chrome.storage.local.set({ curated_subreddits: default_curated_subreddits });
-    curated_subreddits = default_curated_subreddits;
-  }
-  if (!sorting) {
-    await chrome.storage.local.set({ sorting: "top" });
-    sorting = "top";
-  }
-  if (!range) {
-    await chrome.storage.local.set({ range: "100" });
-    range = "100";
-  }
-  if (!time) {
-    await chrome.storage.local.set({ time: "all" });
-    time = "all";
-  }
+  // Set defaults if not present
+  await chrome.storage.local.set({
+    subreddits: (subreddits ??= default_subreddits),
+    curated_subreddits: (curated_subreddits ??= default_curated_subreddits),
+    sorting: (sorting ??= default_filters.sorting),
+    range: (range ??= default_filters.range),
+    time: (time ??= default_filters.time),
+  });
 
   // Check if curated subs have been changed and add accordingly
   // TODO: only run if in settings
@@ -235,11 +62,7 @@ export const fetchAndSanitizeLocalStorage = async () => {
   }
 
   if (!user_has_all_curated_subs) {
-    console.log("Updating curated subreddits...");
-    console.log(default_curated_subreddits);
     let new_curated_subs = default_curated_subreddits;
-    console.log(new_curated_subs);
-
     for (let cat_key of Object.keys(default_curated_subreddits)) {
       for (let sub_key of Object.keys(default_curated_subreddits[cat_key])) {
         if (curated_subreddits[cat_key][sub_key]) {
@@ -249,7 +72,6 @@ export const fetchAndSanitizeLocalStorage = async () => {
         }
       }
     }
-    console.log(new_curated_subs);
     await chrome.storage.local.set({ curated_subreddits: new_curated_subs });
   }
 
@@ -297,8 +119,6 @@ export const setUpEventHandlersForDropDownMenus = (sorting, range, time) => {
   const setEventListenerForMenu = (menu_selector, setting_name) => {
     document.querySelector(menu_selector).addEventListener("change", async (e) => {
       await chrome.storage.local.set({ [setting_name]: e.target.value });
-      console.log(setting_name);
-      console.log(e.target.value);
     });
   };
   setEventListenerForMenu(".dropdown-sort .dropdown-content", "sorting");

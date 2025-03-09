@@ -1,99 +1,94 @@
-
 /* @import url('https://fonts.googleapis.com/css?family=Livvic:100,200,300&display=swap'); */
 
 /* -------------------------------- Main Page -------------------------------- */
 
-
 .bottom-bar {
-    position: absolute;
-    width: -webkit-fill-available;
-    justify-content: space-between;
-    height: 3rem;
-    text-align: left;
-    padding-bottom: 2rem;
-    padding-left: 5rem;
-    padding-right: 5rem;
-    background-color: orange;
-    bottom: 0;
-    left: 0;
-    font-family: 'Livvic', sans-serif;
-    background: rgb(255,255,255);
-    background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(0,0,0,1) 100%);
-    display: flex;
-    animation: fadeIn 0.5s linear;
+  position: absolute;
+  width: -webkit-fill-available;
+  justify-content: space-between;
+  height: 3rem;
+  text-align: left;
+  padding-bottom: 2rem;
+  padding-left: 5rem;
+  padding-right: 5rem;
+  background-color: orange;
+  bottom: 0;
+  left: 0;
+  font-family: "Livvic", sans-serif;
+  background: rgb(255, 255, 255);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 1) 100%);
+  display: flex;
+  animation: fadeIn 0.5s linear;
 }
 .bottom-bar a {
-    color: white;
-    font-size: 1.5rem;
-    font-weight: 200;
-    text-decoration: none;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 200;
+  text-decoration: none;
 }
 
 .bottom-bar-fade-in {
-    opacity: 1;
+  opacity: 1;
 }
 
 .image-title {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 .image-title .name {
-
 }
 .image-title .sub {
-    color: #aeaeae;
-    font-size: 1.3rem;
-    font-weight: 800;
+  color: #aeaeae;
+  font-size: 1.3rem;
+  font-weight: 800;
 }
 
-
 .download-button {
-    /* justify-self: flex-end; */
-    /* position: absolute; */
-    /* bottom: 2rem;
+  /* justify-self: flex-end; */
+  /* position: absolute; */
+  /* bottom: 2rem;
     right: 2rem; */
-    height: 4rem;
-    width: 12rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* background: #8080804d; */
-    border-radius: 0.4rem;
-    font-family: 'Livvic', sans-serif;
-    color: grey;
-    font-size: 2rem;
-    font-weight: 200;
-    text-decoration: none;
-    box-shadow: 0px 0px 5px;
-    transition: 213ms linear;
+  height: 4rem;
+  width: 12rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background: #8080804d; */
+  border-radius: 0.4rem;
+  font-family: "Livvic", sans-serif;
+  color: grey;
+  font-size: 2rem;
+  font-weight: 200;
+  text-decoration: none;
+  box-shadow: 0px 0px 5px;
+  transition: 213ms linear;
 }
 
 .settings-button {
-    text-decoration: none;
-    height: 4rem;
-    width: 4rem;
-    margin-left: auto;
-    margin-right: 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* background: #8080804d; */
-    border-radius: 0.4rem;
-    font-family: 'Livvic', sans-serif;
-    color: grey;
-    font-size: 2rem;
-    font-weight: 200;
-    text-decoration: none;
-    box-shadow: 0px 0px 5px;
-    transition: 213ms linear;
+  text-decoration: none;
+  height: 4rem;
+  width: 4rem;
+  margin-left: auto;
+  margin-right: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background: #8080804d; */
+  border-radius: 0.4rem;
+  font-family: "Livvic", sans-serif;
+  color: grey;
+  font-size: 2rem;
+  font-weight: 200;
+  text-decoration: none;
+  box-shadow: 0px 0px 5px;
+  transition: 213ms linear;
 }
 .settings-button img {
-    -webkit-mask: url(/images/settings.svg) no-repeat center;
-    height: 2.2rem;
-    width: 2.2rem;
-    background-color: white;
+  -webkit-mask: url(/images/settings.svg) no-repeat center;
+  height: 2.2rem;
+  width: 2.2rem;
+  background-color: white;
 }
-
 
 /* .settings-button:hover {
     cursor: pointer;
@@ -102,232 +97,233 @@
     transition: 69ms linear;
     text-decoration: none;
 } */
-.download-button:hover,.settings-button:hover,.settings-window-exit-button:hover   {
-    cursor: pointer !important;
-    color: white !important;
-    background: #8080804d;
-    transition: 69ms linear;
-    text-decoration: none;
+.download-button:hover,
+.settings-button:hover,
+.settings-window-exit-button:hover {
+  cursor: pointer !important;
+  color: white !important;
+  background: #8080804d;
+  transition: 69ms linear;
+  text-decoration: none;
 }
 .settings-window-wrapper {
-    background: black;
-    width: 100%;
-    top: 0;
-    left: 0;
-    height: 100%;
-    /* position: fixed; */
-    position: relative;
-    display: flex;
-    justify-content: center;
-    transition: opacity 100ms;
-    z-index: 10;
+  background: black;
+  width: 100%;
+  top: 0;
+  left: 0;
+  height: 100%;
+  /* position: fixed; */
+  position: relative;
+  display: flex;
+  justify-content: center;
+  transition: opacity 100ms;
+  z-index: 10;
 }
 .visible {
-    opacity: 100;
+  opacity: 100;
 }
 .invisible {
-    pointer-events: none;
-    opacity: 0;
+  pointer-events: none;
+  opacity: 0;
 }
 
 /* -------------------------------- Settings Page -------------------------------- */
 
 .settings-window {
-    width: 40rem;
-    padding-top: 1rem;
-    padding-bottom: 2rem;
-    height: min-content;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
+  width: 40rem;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+  height: min-content;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
 }
 .add-subreddit {
-    width: 100%;
+  width: 100%;
 }
 
-.add-subreddit input{
-    width: 100%;
-    height: 3rem;
-    color: white;
-    padding-left: 1rem;
-    font-size: 2rem;
-    font-family: 'Livvic', sans-serif;
-    background: black;
-    border: 1px solid grey;
-    border-radius: 3px;
-    outline: none;
-    transition: all 100ms;
-    background: url(./images/plus.svg);
-    background-position: right center;
-    background-repeat: no-repeat;
-    background-size: 2.5rem auto;
+.add-subreddit input {
+  width: 100%;
+  height: 3rem;
+  color: white;
+  padding-left: 1rem;
+  font-size: 2rem;
+  font-family: "Livvic", sans-serif;
+  background: black;
+  border: 1px solid grey;
+  border-radius: 3px;
+  outline: none;
+  transition: all 100ms;
+  background: url(../images/plus.svg);
+  background-position: right center;
+  background-repeat: no-repeat;
+  background-size: 2.5rem auto;
 }
-.tip{
-    margin-top:0.2rem;
-    padding-left:0.4rem;
-    padding-top:1.0rem;
-    padding-bottom:1.0rem;
-    font-family: 'Livvic', sans-serif;
-    font-size: 1.2rem;
-    color: white;
+.tip {
+  margin-top: 0.2rem;
+  padding-left: 0.4rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-family: "Livvic", sans-serif;
+  font-size: 1.2rem;
+  color: white;
 }
-.add-subreddit input[type=text]:focus {
-    box-shadow: 0 0 9px rgb(255, 255, 255);
-    border: 1px solid rgb(224, 224, 224);
-  }
-.add-subreddit img{
-    -webkit-mask: url(/images/settings.svg) no-repeat center;
-    height: 2.2rem;
-    width: 2.2rem;
-    background-color: white;
+.add-subreddit input[type="text"]:focus {
+  box-shadow: 0 0 9px rgb(255, 255, 255);
+  border: 1px solid rgb(224, 224, 224);
+}
+.add-subreddit img {
+  -webkit-mask: url(/images/settings.svg) no-repeat center;
+  height: 2.2rem;
+  width: 2.2rem;
+  background-color: white;
 }
 .settings-window-exit-button {
-    position: absolute;
-    bottom: 1.4rem;
-    right: 16rem;
-    text-decoration: none;
-    height: 4rem;
-    width: 4rem;
-    margin-left: auto;
-    margin-right: 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* background: #8080804d; */
-    border-radius: 0.4rem;
-    font-family: 'Livvic', sans-serif;
-    color: grey;
-    font-size: 2rem;
-    font-weight: 200;
-    text-decoration: none;
-    box-shadow: 0px 0px 5px;
-    transition: 213ms linear;
+  position: absolute;
+  bottom: 1.4rem;
+  right: 16rem;
+  text-decoration: none;
+  height: 4rem;
+  width: 4rem;
+  margin-left: auto;
+  margin-right: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background: #8080804d; */
+  border-radius: 0.4rem;
+  font-family: "Livvic", sans-serif;
+  color: grey;
+  font-size: 2rem;
+  font-weight: 200;
+  text-decoration: none;
+  box-shadow: 0px 0px 5px;
+  transition: 213ms linear;
 }
 .settings-window-exit-button img {
-    -webkit-mask: url(/images/settings.svg) no-repeat center;
-    height: 2.2rem;
-    width: 2.2rem;
-    background-color: white;
+  -webkit-mask: url(/images/settings.svg) no-repeat center;
+  height: 2.2rem;
+  width: 2.2rem;
+  background-color: white;
 }
 .delete-button {
-    -webkit-mask: url(/images/cross.svg) no-repeat center;
-    margin-left: auto;
-    height: 1.2rem;
-    width: 1.2rem;
-    background-color: white;
-    transition: all 100ms;
-    transform: scale(1.0) !important;
+  -webkit-mask: url(/images/cross.svg) no-repeat center;
+  margin-left: auto;
+  height: 1.2rem;
+  width: 1.2rem;
+  background-color: white;
+  transition: all 100ms;
+  transform: scale(1) !important;
 }
 .delete-button:hover {
-    cursor: pointer;
-    background-color: grey;
-    box-shadow: 0px 0px 5px;
-    transform: scale(1.5) !important;
+  cursor: pointer;
+  background-color: grey;
+  box-shadow: 0px 0px 5px;
+  transform: scale(1.5) !important;
 }
-.subreddit label{
-    
-    position: relative !important;
+.subreddit label {
+  position: relative !important;
 }
 .title {
-    width: 100%;
-    color: white;
-    font-size: 2rem;
+  width: 100%;
+  color: white;
+  font-size: 2rem;
 }
 .subreddit {
-    display: flex !important;
-    color: white;
-    font-family: 'Livvic', sans-serif;
-    height: 2rem;
-    width: 13rem;
-    font-size: 1.1rem;
-    align-items: center;
-    padding-right: 1rem;
-    padding-left: 1rem;
-    margin-top: 0.4rem;
-    position: relative;
-    display: inline-block;
-    margin-right: 1em;
-    white-space: nowrap;
-    line-height: 1;
+  display: flex !important;
+  color: white;
+  font-family: "Livvic", sans-serif;
+  height: 2rem;
+  width: 13rem;
+  font-size: 1.1rem;
+  align-items: center;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  margin-top: 0.4rem;
+  position: relative;
+  display: inline-block;
+  margin-right: 1em;
+  white-space: nowrap;
+  line-height: 1;
 }
 .subreddit:nth-child(even) {
-    background-color: rgb(71, 71, 71);
+  background-color: rgb(71, 71, 71);
 }
 .subreddit:nth-child(odd) {
-    background-color: rgb(71, 71, 71);
-    /* background-color: rgb(184, 177, 177); */
-
+  background-color: rgb(71, 71, 71);
+  /* background-color: rgb(184, 177, 177); */
 }
 
 .dropdowns {
-    display:flex;
-    flex-direction:row;
-    justify-content: space-between;
-    margin-top: 0.2rem;
-    padding-left: 0.4rem;
-    padding-top: 1.0rem;
-    padding-bottom: 1.0rem;
-    font-family: 'Livvic', sans-serif;
-    font-size: 1.2rem;
-    color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 0.2rem;
+  padding-left: 0.4rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-family: "Livvic", sans-serif;
+  font-size: 1.2rem;
+  color: white;
 }
 .dropdown-description {
-    margin: auto 0;
+  margin: auto 0;
 }
 .dropdown {
-    position: relative;
-    display: inline-block;
+  position: relative;
+  display: inline-block;
 }
 
 .dropdown-content {
-    color: white;
-    background-color: #757575;
-    width: 126px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
+  color: white;
+  background-color: #757575;
+  width: 126px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
 }
 .dropdown-content:focus {
-    outline: grey;
+  outline: grey;
 }
 
-
-.dropdown:hover .dropbtn {background-color: rgb(50,50,50); cursor: pointer;} 
-
+.dropdown:hover .dropbtn {
+  background-color: rgb(50, 50, 50);
+  cursor: pointer;
+}
 
 /* .loading,.loading :not(.pace,.pace-inactive,.pace-progress) { */
 body {
-    background: black;
+  background: black;
 }
 .loading {
-    opacity: 0;
-    width: 100%;
-    height:  100%;
-    position: absolute;
-    z-index: -1;
-    background-size: cover;
-    /* height: 100%; */
-    /* transition: opacity 200ms linear; */
-    animation-name: fadeIn;
-    animation-duration: 0.35s;
-    animation-fill-mode: both;
-    background: black;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -1;
+  background-size: cover;
+  /* height: 100%; */
+  /* transition: opacity 200ms linear; */
+  animation-name: fadeIn;
+  animation-duration: 0.35s;
+  animation-fill-mode: both;
+  background: black;
 }
 
 @keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-} 
+  0% {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 
 /* .loaded {
     opacity: 100;
     transition: opacity 200ms linear;
 } */
 .pace {
-    opacity: 0.25;
+  opacity: 0.25;
   -webkit-pointer-events: none;
   pointer-events: none;
 
@@ -349,9 +345,3 @@ body {
   width: 100%;
   height: 1px;
 }
-
-
-
-
-
-

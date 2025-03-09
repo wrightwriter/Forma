@@ -1,6 +1,6 @@
 # Forma New Tab Extension
 
-Forma replaces your new tab with images, from a selection catored to your interests.
+Forma replaces your new tab with images, from a selection catered to your interests.
 
 ## Permissions
 

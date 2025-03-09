@@ -12,12 +12,9 @@ import {
   getKeyFromValue,
   appendUserSubreddit,
   setUpEventHandlersForDropDownMenus,
-  deleteUserSettings,
-  default_curated_subreddits,
   setUpEventHandlersForBottomMenuFadeOut,
 } from "./utils.js";
 
-let mouse_delay = 5;
 let _delay = () => {};
 
 window.onload = async (res) => {
@@ -25,7 +22,7 @@ window.onload = async (res) => {
     showSettings();
   };
 
-  let { subreddits, curated_subreddits, sorting, range, time } = await fetchAndSanitizeLocalStorage();
+  let { sorting, range, time } = await fetchAndSanitizeLocalStorage();
 
   setUpEventHandlersForDropDownMenus(sorting, range, time);
 
@@ -68,7 +65,7 @@ window.onload = async (res) => {
       document.querySelector(".download-button").href = img_src;
       document.querySelector(".download-button").onclick = (e) => {
         e.preventDefault();
-        chrome.runtime.sendMessage({ type: "download", message: img_src }); // send to downloader.js
+        chrome.runtime.sendMessage({ type: "download", message: img_src }); // send to service-worker.js
       };
       chrome.runtime.sendMessage({
         type: "get_new_image",
@@ -77,7 +74,7 @@ window.onload = async (res) => {
           range: range,
           time: time,
         },
-      }); // send to downloader.js
+      }); // send to service-worker.js
     } else {
       console.warn("Couldn't get image from indexedDB, retrying...");
       const message = {
@@ -88,7 +85,7 @@ window.onload = async (res) => {
           time: time,
         },
       };
-      chrome.runtime.sendMessage(message); // send to downloader.js
+      chrome.runtime.sendMessage(message); // send to service-worker.js
     }
   });
 };
@@ -108,7 +105,7 @@ const showSettings = async () => {
     document.querySelector(".settings-window-wrapper").classList.add("invisible");
   };
 
-  let { subreddits, curated_subreddits, sorting, range, time } = await fetchAndSanitizeLocalStorage();
+  let { subreddits, curated_subreddits } = await fetchAndSanitizeLocalStorage();
   // document.querySelector(".dropdown-sort>button").innerHTML = sorting
 
   document.querySelector(".add-subreddit input").addEventListener("keyup", async (event) => {
