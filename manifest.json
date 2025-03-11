@@ -2,7 +2,7 @@
   "name": "Forma - Beautiful New Tab From Reddit",
   "manifest_version": 3,
   "short_name": "Forma",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Reddit images tailored to your interests.",
   "icons": {
     "48": "images/logo48.png",
