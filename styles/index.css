@@ -113,7 +113,7 @@
   left: 0;
   height: 100%;
   /* position: fixed; */
-  position: relative;
+  position: absolute;
   display: flex;
   justify-content: center;
   transition: opacity 100ms;
